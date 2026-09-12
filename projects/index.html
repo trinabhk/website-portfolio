@@ -35,10 +35,124 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://trinabh.com.np/" },
-    { "@type": "ListItem", "position": 2, "name": "Work", "item": "https://trinabh.com.np/projects/" }
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://trinabh.com.np/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Work",
+          "item": "https://trinabh.com.np/projects/"
+        }
+      ]
+    },
+    {
+      "@type": "ItemList",
+      "@id": "https://trinabh.com.np/projects/#case-studies",
+      "url": "https://trinabh.com.np/projects/",
+      "name": "Technical SEO case studies",
+      "itemListOrder": "https://schema.org/ItemListOrderAscending",
+      "numberOfItems": 6,
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "item": {
+            "@type": "CreativeWork",
+            "@id": "https://trinabh.com.np/projects/#soft-404",
+            "url": "https://trinabh.com.np/projects/#soft-404",
+            "name": "Recovering an e-commerce store from Soft 404s",
+            "description": "The affected category URLs returned to a clean indexable state and re-entered the index after recrawl.",
+            "keywords": "e-commerce, Soft 404, noindex, canonical",
+            "author": {
+              "@id": "https://trinabh.com.np/#person"
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "item": {
+            "@type": "CreativeWork",
+            "@id": "https://trinabh.com.np/projects/#redirect-chain",
+            "url": "https://trinabh.com.np/projects/#redirect-chain",
+            "name": "Untangling a redirect chain after a migration",
+            "description": "Redirects resolved in a single hop and the broken-link count in Search Console fell back toward zero.",
+            "keywords": "migration, 301 mapping, redirect chains, internal links",
+            "author": {
+              "@id": "https://trinabh.com.np/#person"
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "item": {
+            "@type": "CreativeWork",
+            "@id": "https://trinabh.com.np/projects/#sitemap-architecture",
+            "url": "https://trinabh.com.np/projects/#sitemap-architecture",
+            "name": "Sitemap architecture for a large catalog",
+            "description": "Crawlers could read and track each section independently, improving discovery of new URLs.",
+            "keywords": "sitemaps, sitemap index, crawl coverage",
+            "author": {
+              "@id": "https://trinabh.com.np/#person"
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "item": {
+            "@type": "CreativeWork",
+            "@id": "https://trinabh.com.np/projects/#search-console-launch",
+            "url": "https://trinabh.com.np/projects/#search-console-launch",
+            "name": "Clean Search Console foundation for a launch",
+            "description": "The site was measurable and crawlable from day one, with a verified property and a registered, error-free sitemap.",
+            "keywords": "GSC verification, DNS / TXT, Bing, Analytics",
+            "author": {
+              "@id": "https://trinabh.com.np/#person"
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 5,
+          "item": {
+            "@type": "CreativeWork",
+            "@id": "https://trinabh.com.np/projects/#ga4-lead-tracking",
+            "url": "https://trinabh.com.np/projects/#ga4-lead-tracking",
+            "name": "Lead tracking setup with GA4 and Tag Manager",
+            "description": "Phone-call clicks and form submissions now show up as trackable events in GA4, giving a real read on which pages generate leads.",
+            "keywords": "GA4, Google Tag Manager, lead tracking, form tracking",
+            "author": {
+              "@id": "https://trinabh.com.np/#person"
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 6,
+          "item": {
+            "@type": "CreativeWork",
+            "@id": "https://trinabh.com.np/projects/#wordpress-malware",
+            "url": "https://trinabh.com.np/projects/#wordpress-malware",
+            "name": "Malware cleanup and migration on an outdated WordPress site",
+            "description": "The site came back clean on the new host with no reinfection, running on a fully updated plugin stack.",
+            "keywords": "WordPress, malware cleanup, site migration, plugin updates",
+            "author": {
+              "@id": "https://trinabh.com.np/#person"
+            }
+          }
+        }
+      ]
+    }
   ]
 }
 </script>
