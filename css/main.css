@@ -661,3 +661,172 @@ html.js .reveal.in { opacity: 1; transform: none; }
   --glow-out:    rgba(28,184,117,0);
 }
 
+/* ============================================================
+   ADDITIONS — append to the end of css/main.css
+   Uses existing tokens only. Nothing here overrides layout.
+   ============================================================ */
+
+/* ---------- 1. tabular numerals ----------
+   The live clock currently reflows every second because digits
+   have different widths. Also fixes the .proof-grid .num figures. */
+.welcome-time,
+#local-time,
+.proof-grid .num,
+.card .num,
+.row .row-no,
+.meta-row .v {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+/* ---------- 2. text wrapping ----------
+   balance = no orphan word on headings. pretty = no orphan on paragraphs. */
+h1, h2, h3,
+.section-head h2,
+.page-head h1,
+.card h3,
+.row h3,
+.band h2 {
+  text-wrap: balance;
+}
+.prose p,
+.section-head p,
+.page-head p,
+.card p,
+.row p {
+  text-wrap: pretty;
+}
+
+/* ---------- 3. view transitions ----------
+   Cross-document morph between pages. Degrades to nothing. */
+@view-transition { navigation: auto; }
+
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-old(root) { animation: vt-out .18s var(--ease) both; }
+  ::view-transition-new(root) { animation: vt-in  .26s var(--ease) both; }
+}
+@keyframes vt-out { to { opacity: 0; } }
+@keyframes vt-in  { from { opacity: 0; transform: translateY(6px); } }
+
+/* The header and progress bar should not fade with the page body. */
+.site-head    { view-transition-name: site-head; }
+.crawl-progress { view-transition-name: crawl-progress; }
+
+/* ---------- 4. crawl progress, CSS-driven ----------
+   Replaces the scroll listener + rAF loop in site.js.
+   Runs off the compositor, so zero INP cost. */
+@supports (animation-timeline: scroll()) {
+  .crawl-progress-bar {
+    transition: none;
+    animation: crawl-depth linear both;
+    animation-timeline: scroll(root block);
+  }
+  @keyframes crawl-depth {
+    from { transform: scaleX(0); }
+    to   { transform: scaleX(1); }
+  }
+}
+
+/* ---------- 5. reveal, CSS-driven ----------
+   Replaces the IntersectionObserver. Note html.js guards are kept so
+   the JS path still works if you don't remove it. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    html.js .reveal {
+      opacity: 1;
+      transform: none;
+      transition: none;
+      animation: reveal-in linear both;
+      animation-timeline: view();
+      animation-range: entry 5% cover 22%;
+    }
+  }
+  @keyframes reveal-in {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: none; }
+  }
+}
+
+/* ---------- 6. status-code semantics on cards ----------
+   200 stays green. 3xx goes clay. 4xx/5xx too. Currently all green. */
+@property --status {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: #14794E;
+}
+
+.card .num,
+.row .row-no {
+  color: var(--status);
+  transition: color .2s var(--ease);
+}
+.card:has(.num[data-status^="3"]) .num,
+.row:has(.row-no[data-status^="3"]) .row-no { --status: var(--signal); }
+.card:has(.num[data-status^="4"]) .num,
+.card:has(.num[data-status^="5"]) .num     { --status: var(--signal); }
+.card .num, .row .row-no                    { --status: var(--index-dim); }
+
+/* scanline sweep on card hover — the one flourish worth having */
+@media (prefers-reduced-motion: no-preference) and (hover: hover) {
+  .card { position: relative; overflow: hidden; }
+  .card::before {
+    content: "";
+    position: absolute; inset: 0;
+    pointer-events: none;
+    background: linear-gradient(
+      100deg,
+      transparent 40%,
+      color-mix(in srgb, var(--index) 9%, transparent) 50%,
+      transparent 60%
+    );
+    transform: translateX(-100%);
+    transition: transform .55s var(--ease);
+  }
+  .card:hover::before { transform: translateX(100%); }
+}
+
+/* ---------- 7. rendering perf ----------
+   Skip layout/paint for off-screen sections. contain-intrinsic-size
+   prevents scrollbar jump, so no CLS. */
+.section,
+.faq-list,
+.site-foot {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 500px;
+}
+
+/* ---------- 8. details open animation ----------
+   FAQ items currently snap. @starting-style makes them ease. */
+@media (prefers-reduced-motion: no-preference) {
+  .faq-item p {
+    transition: opacity .25s var(--ease), translate .25s var(--ease);
+  }
+  .faq-item[open] p {
+    @starting-style { opacity: 0; translate: 0 -6px; }
+  }
+}
+
+/* ---------- 9. header shrink on scroll ----------
+   Subtle. Header tightens once you leave the hero. */
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .head-inner {
+      animation: head-shrink linear both;
+      animation-timeline: scroll(root block);
+      animation-range: 0 220px;
+    }
+    @keyframes head-shrink {
+      to { height: 54px; }
+    }
+  }
+}
+
+/* ---------- 10. reduced-motion global kill ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .crawl-progress-bar,
+  html.js .reveal,
+  .head-inner,
+  .card::before { animation: none !important; transition: none !important; }
+  ::view-transition-old(root),
+  ::view-transition-new(root) { animation: none !important; }
+}
