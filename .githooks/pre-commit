@@ -1,0 +1,9 @@
+#!/bin/sh
+# Regenerate sitemap.xml and feed.xml, then stage them with this commit.
+#
+# build-feeds.js dates any file with uncommitted changes as TODAY, so running
+# here (before the commit exists) produces the same lastmod that `--check`
+# will compute in CI after the commit lands.
+
+node scripts/build-feeds.js || exit 1
+git add sitemap.xml feed.xml
