@@ -77,7 +77,7 @@
       <div class="grid" style="gap:1.4rem">
 
         <article class="card reveal" id="soft-404">
-          <span class="num">case 01 · 200 OK</span>
+          <span class="num" data-status="200">case 01 · 200 OK</span>
           <h3>Recovering an e-commerce store from <a href="/services/#crawl-repair">Soft 404s</a></h3>
           <p style="margin-bottom:1rem"><strong>Context.</strong> Empty and thin category pages on a store were being treated by Google as Soft 404s - pages that return a 200 status but look like errors - so they dropped out of the index and dragged on crawl efficiency.</p>
           <p style="margin-bottom:1rem"><strong>What I did.</strong> Audited the affected templates, added proper handling for genuinely empty categories, removed accidental <code>noindex</code> directives on pages that should rank, and corrected <a href="/blog/technical-seo-audit-checklist/">canonicals</a> so Google stopped seeing duplicates.</p>
@@ -86,7 +86,7 @@
         </article>
 
         <article class="card reveal" id="redirect-chain">
-          <span class="num">case 02 · 301</span>
+          <span class="num" data-status="301">case 02 · 301</span>
           <h3>Untangling a <a href="/services/#redirects">redirect chain</a> after a migration</h3>
           <p style="margin-bottom:1rem"><strong>Context.</strong> A site migration had left behind multi-hop redirect chains (old URL → interim URL → final URL), wasting crawl budget and diluting link signals.</p>
           <p style="margin-bottom:1rem"><strong>What I did.</strong> Mapped every legacy URL to its correct destination, collapsed the chains into <a href="/blog/technical-seo-audit-checklist/">clean single-hop 301s</a>, fixed the resulting 4xx stragglers, and updated internal links to point at final URLs directly.</p>
