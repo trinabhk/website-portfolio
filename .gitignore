@@ -13,4 +13,6 @@ desktop.ini
 # Node (in case scripts/ dependencies are installed locally)
 node_modules/
 npm-debug.log*
-lighthouse-*.jsonMANUAL_SEO_ACTIONS.md
+lighthouse-*.json
+MANUAL_SEO_ACTIONS.md
+
