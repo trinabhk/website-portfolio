@@ -118,8 +118,6 @@ const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 ${entries.map((e) => `  <url>
     <loc>${ORIGIN}${e.url}</loc>
     <lastmod>${e.lastmod}</lastmod>
-    <changefreq>${e.changefreq}</changefreq>
-    <priority>${e.priority}</priority>
   </url>`).join('\n')}
 </urlset>
 `;
