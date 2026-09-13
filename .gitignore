@@ -14,5 +14,7 @@ desktop.ini
 node_modules/
 npm-debug.log*
 lighthouse-*.json
+bisect-*.json
+lh-*.html
 MANUAL_SEO_ACTIONS.md
 
