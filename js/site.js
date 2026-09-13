@@ -59,10 +59,17 @@
   });
 })();
 
-// Scroll reveal - kept separate so a failure here can't strand the nav, and a
-// failure in the nav can't leave every .reveal element stuck at opacity 0.
+// Scroll reveal - FALLBACK ONLY. CSS animation-timeline: view() drives this in
+// Chrome/Edge 115+ and Safari 26+. Firefox still ships it behind a flag, so this
+// observer stays until that lands - without it, html.js .reveal would sit at
+// opacity 0 forever there and the page would read as blank below the fold.
+// Kept separate so a failure here can't strand the nav, and a failure in the
+// nav can't leave every .reveal element stuck at opacity 0.
 // The homepage hero is intentionally excluded so it paints immediately.
 (function () {
+  // If CSS handles it, do nothing at all - no observer, no class toggling.
+  if (window.CSS && CSS.supports && CSS.supports('animation-timeline: view()')) return;
+
   var items = Array.prototype.slice.call(document.querySelectorAll('.reveal')).filter(function (el) {
     return !(el.closest && el.closest('.welcome'));
   });
@@ -152,43 +159,9 @@
   window.addEventListener('pointercancel', onUp);
 })();
 
-// Crawl progress: scroll depth read as how far a crawler has gotten
-(function () {
-  var bar = document.createElement('div');
-  bar.className = 'crawl-progress';
-  bar.innerHTML = '<div class="crawl-progress-bar"></div>';
-  document.body.appendChild(bar);
-  var fill = bar.firstChild;
-  var scrollable = 0;
-  var ticking = false;
-
-  function measureScrollable() {
-    scrollable = document.documentElement.scrollHeight - window.innerHeight;
-  }
-
-  function update() {
-    var pct = scrollable > 0 ? (window.scrollY / scrollable) : 0;
-    var clamped = Math.min(1, Math.max(0, pct));
-    fill.style.transform = 'scaleX(' + clamped + ')';
-  }
-
-  function requestUpdate() {
-    if (ticking) return;
-    ticking = true;
-    window.requestAnimationFrame(function () {
-      update();
-      ticking = false;
-    });
-  }
-
-  measureScrollable();
-  update();
-  window.addEventListener('scroll', requestUpdate, { passive: true });
-  window.addEventListener('resize', function () {
-    measureScrollable();
-    requestUpdate();
-  });
-})();
+// Crawl progress is now pure CSS: animation-timeline: scroll(root block).
+// The markup lives in each page's HTML rather than being injected here, so the
+// bar exists before first paint instead of after site.js parses.
 
 // Tab-away easter egg: the "page" reports itself gone while you're not looking
 (function () {

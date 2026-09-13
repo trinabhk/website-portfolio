@@ -144,6 +144,9 @@ a { color: inherit; text-decoration: none; }
   transition: transform .12s linear;
 }
 @media (prefers-reduced-motion: reduce) { .crawl-progress { display: none; } }
+/* No JS fallback any more, so in a browser without scroll() the bar would just
+   sit at scaleX(0) forever. Hide it rather than ship a dead element. */
+@supports not (animation-timeline: scroll()) { .crawl-progress { display: none; } }
 
 /* ============================================================
    Header
@@ -569,9 +572,14 @@ html:has(.welcome) { scroll-snap-type: y proximity; }
 /* Scroll reveal is gated on html.js, which the inline head script sets. If the
    script never runs - blocked, failed, disabled - nothing is ever hidden, so
    the page reads in full instead of going blank waiting for a class. */
-html.js .reveal { opacity: 0; transform: translateY(16px); transition: opacity .7s var(--ease), transform .7s var(--ease); }
-html.js .reveal.in { opacity: 1; transform: none; }
-@media (prefers-reduced-motion: reduce) { html.js .reveal { opacity: 1; transform: none; transition: none; } }
+/* Gated on @supports not (...) as well: in a browser that drives reveal from
+   CSS, nothing should ever set opacity 0 here. Otherwise removing the
+   IntersectionObserver leaves Firefox with permanently invisible content. */
+@supports not (animation-timeline: view()) {
+  html.js .reveal { opacity: 0; transform: translateY(16px); transition: opacity .7s var(--ease), transform .7s var(--ease); }
+  html.js .reveal.in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) { html.js .reveal { opacity: 1; transform: none; transition: none; } }
+}
 
 .mt-0 { margin-top: 0; }
 .center { text-align: center; }
@@ -733,13 +741,12 @@ h1, h2, h3,
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
     html.js .reveal {
-      opacity: 1;
-      transform: none;
-      transition: none;
       animation: reveal-in linear both;
-      animation-timeline: view();
+      animation-timeline: view();   /* must stay AFTER the shorthand, which resets it */
       animation-range: entry 5% cover 22%;
     }
+    /* The hero paints immediately - matches the .welcome filter in site.js. */
+    html.js .welcome .reveal { animation: none; opacity: 1; transform: none; }
   }
   @keyframes reveal-in {
     from { opacity: 0; transform: translateY(16px); }
@@ -808,8 +815,11 @@ h1, h2, h3,
 
 /* ---------- 9. header shrink on scroll ----------
    Subtle. Header tightens once you leave the hero. */
+/* Desktop only. Below 760px .head-inner is height:auto + flex-wrap, because the
+   open mobile nav wraps onto its own row inside it. An animation forcing a
+   definite height wins over the cascade and clips that panel. */
 @supports (animation-timeline: scroll()) {
-  @media (prefers-reduced-motion: no-preference) {
+  @media (prefers-reduced-motion: no-preference) and (min-width: 761px) {
     .head-inner {
       animation: head-shrink linear both;
       animation-timeline: scroll(root block);
