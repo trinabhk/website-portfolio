@@ -274,7 +274,9 @@ a { color: inherit; text-decoration: none; }
 /* ============================================================
    Welcome (homepage full-page intro)
    ============================================================ */
-html:has(.welcome) { scroll-snap-type: y proximity; }
+/* Root-scroller snapping was removed: it prevented Chrome from nominating an
+   LCP candidate, making LCP unreportable for the homepage. Confirmed by bisect
+   on 2026-09-13. */
 .welcome {
   position: relative;
   min-height: 100dvh;
@@ -282,7 +284,6 @@ html:has(.welcome) { scroll-snap-type: y proximity; }
   text-align: center;
   background-image: radial-gradient(circle, color-mix(in srgb, var(--line) 70%, transparent) 1px, transparent 1.5px);
   background-size: 24px 24px;
-  scroll-snap-align: start;
   cursor: grab;
   /* pan-y, not none: native touch scrolling has to keep working across a
      full-viewport section. The drag-to-dismiss is a pointer flourish on top. */
@@ -386,7 +387,7 @@ html:has(.welcome) { scroll-snap-type: y proximity; }
 }
 .section-head p { color: var(--ink-soft); margin: 0; }
 
-.proof-strip { padding: clamp(1.8rem, 4vw, 2.8rem) 0; scroll-snap-align: start; }
+.proof-strip { padding: clamp(1.8rem, 4vw, 2.8rem) 0; }
 .proof-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
